@@ -47,6 +47,7 @@ export default function Home() {
     e.preventDefault();
     try {
       const { data } = await axios.post(`http://127.0.0.1:8000/api/register`, {
+        name: name,
         email: email,
         password: password,
       });
@@ -128,7 +129,7 @@ export default function Home() {
               <div className="w-full max-w-xs">
                 <form
                   className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                  onSubmit={handleLogin}
+                  onSubmit={handleRegister}
                 >
                   <div className="mb-4">
                     <input
