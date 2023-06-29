@@ -1,8 +1,11 @@
 "use client"; // This is a client component
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Dashboard from "./dashboard/page";
 import axios from "axios";
 export default function Home() {
+  const navigation = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [email, setEmail] = useState(""); // State to capture email value
   const [password, setPassword] = useState(""); // State to capture password value
@@ -21,11 +24,22 @@ export default function Home() {
   };
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const { data } = await axios.post(`http://127.0.0.1:8000/api/login`, {
         email: email,
         password: password,
       });
+
+      // Extract the token from the response
+      const token = data.token;
+
+      // Store the token in localStorage
+      localStorage.setItem("token", token);
+      // Set the token in the Axios header
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      navigation.push("/dashboard");
     } catch (error) {}
   };
 
@@ -81,7 +95,7 @@ export default function Home() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <p class="text-red-500 text-xs italic">
+                    <p className="text-red-500 text-xs italic">
                       Please choose a password.
                     </p>
                   </div>
