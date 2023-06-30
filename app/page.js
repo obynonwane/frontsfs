@@ -14,6 +14,7 @@ export default function Home() {
   const [showReg, setShowReg] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [loginError, setLoginError] = useState(null);
+  const [registerError, setRegisterError] = useState(null);
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -117,7 +118,8 @@ export default function Home() {
         }
       );
     } catch (error) {
-      console.log(error, "From rgistering");
+      setPassword("");
+      setRegisterError(error.response.data.error.email[0]);
     }
   };
 
@@ -206,8 +208,8 @@ export default function Home() {
             <div className="text-center p-10">
               <div className="w-full max-w-xs">
                 {/* Display login error */}
-                {loginError && (
-                  <p className="text-red-500 text-xs italic">{loginError}</p>
+                {registerError && (
+                  <p className="text-red-500 text-xs italic">{registerError}</p>
                 )}
                 {emailError && (
                   <p className="text-red-500 text-xs italic">{emailError}</p>
