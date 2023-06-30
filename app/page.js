@@ -18,6 +18,7 @@ export default function Home() {
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const loadLoginComponent = () => {
     setShowLogin(true);
@@ -117,6 +118,21 @@ export default function Home() {
           password: password,
         }
       );
+
+      // Registration successful
+      setSuccessMessage("User created successfully proceed to Login");
+      // Reset form fields
+      setName("");
+      setEmail("");
+      setPassword("");
+      setNameError("");
+      setEmailError("");
+      setPasswordError("");
+      setRegisterError(null);
+
+      // Show login component
+      // setShowReg(false);
+      // setShowLogin(true);
     } catch (error) {
       setPassword("");
       setRegisterError(error.response.data.error.email[0]);
@@ -207,6 +223,12 @@ export default function Home() {
           {showReg && (
             <div className="text-center p-10">
               <div className="w-full max-w-xs">
+                {/* Display success message */}
+                {successMessage && (
+                  <p className="text-green-500 text-xs italic">
+                    {successMessage}
+                  </p>
+                )}
                 {/* Display login error */}
                 {registerError && (
                   <p className="text-red-500 text-xs italic">{registerError}</p>
