@@ -6,8 +6,18 @@ export default function Page() {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
   const [editingTaskId, setEditingTaskId] = useState(null);
-  const [editedTask, setEditedTask] = useState({ title: "", description: "" });
-  const [newTask, setNewTask] = useState({ title: "", description: "" });
+  const [editedTask, setEditedTask] = useState({
+    title: "",
+    description: "",
+    severity: "",
+  });
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    startDate: null,
+    endDate: null,
+    severity: "Low",
+  });
 
   useEffect(() => {
     async function retrieveProjectDetail() {
@@ -55,6 +65,9 @@ export default function Page() {
       setEditedTask({
         title: taskToEdit.title,
         description: taskToEdit.description,
+        severity: taskToEdit.severity,
+        startDate: taskToEdit.start_date,
+        endDate: taskToEdit.end_date,
       });
     }
   };
@@ -74,12 +87,13 @@ export default function Page() {
                   ...task,
                   title: editedTask.title,
                   description: editedTask.description,
+                  severity: editedTask.severity,
                 }
               : task
           )
         );
         setEditingTaskId(null);
-        setEditedTask({ title: "", description: "" });
+        setEditedTask({ title: "", description: "", severity: "" });
       }
     } catch (error) {
       setError(error);
@@ -87,6 +101,30 @@ export default function Page() {
   };
 
   const handleCreate = async () => {
+    if (newTask.title.trim() === "") {
+      setError("Task title cannot be empty.");
+      return;
+    }
+
+    if (newTask.description.trim() === "") {
+      setError("Task description cannot be empty.");
+      return;
+    }
+
+    if (newTask.severity === "") {
+      setError("Please select a severity for the task.");
+      return;
+    }
+
+    if (newTask.startDate === null) {
+      setError("Please enter a start date for the task.");
+      return;
+    }
+
+    if (newTask.endDate === null) {
+      setError("Please enter an end date for the task.");
+      return;
+    }
     try {
       const response = await axios.post(
         "https://sfsapi-f7a49b940304.herokuapp.com/api/tasks",
@@ -96,8 +134,15 @@ export default function Page() {
         // Add the created task to the tasks state
         const createdTask = response.data.task;
         setTasks((prevTasks) => [...prevTasks, createdTask]);
-        setNewTask({ title: "", description: "" });
+        setNewTask({
+          title: "",
+          description: "",
+          startDate: null,
+          endDate: null,
+          severity: "Low",
+        });
       }
+      setError("");
     } catch (error) {
       setError(error);
     }
@@ -109,10 +154,10 @@ export default function Page() {
     window.location.href = "/";
   };
 
-  if (error) {
-    // Handle error case here
-    return <div>Error occurred: {error.message}</div>;
-  }
+  // if (error) {
+  //   // Handle error case here
+  //   return <div>Error occurred: {error.message}</div>;
+  // }
 
   return (
     <div className="relative overflow-x-auto mx-20 mt-5">
@@ -126,6 +171,8 @@ export default function Page() {
         Logout
       </button>
       <div className="mb-4">
+        {error && <p className="text-red-500 text-xs italic">{error}</p>}
+
         <input
           type="text"
           value={newTask.title}
@@ -140,6 +187,31 @@ export default function Page() {
             setNewTask({ ...newTask, description: e.target.value })
           }
           placeholder="Enter task description"
+          className="border-2 border-gray-300 rounded px-4 py-2 mr-2"
+        />
+        <select
+          value={newTask.severity}
+          onChange={(e) => setNewTask({ ...newTask, severity: e.target.value })}
+          className="border-2 border-gray-300 rounded px-4 py-2 mr-2"
+        >
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        <input
+          type="date"
+          value={newTask.startDate}
+          onChange={(e) =>
+            setNewTask({ ...newTask, startDate: e.target.value })
+          }
+          placeholder="Start Date"
+          className="border-2 border-gray-300 rounded px-4 py-2 mr-2"
+        />
+        <input
+          type="date"
+          value={newTask.endDate}
+          onChange={(e) => setNewTask({ ...newTask, endDate: e.target.value })}
+          placeholder="End Date"
           className="border-2 border-gray-300 rounded px-4 py-2 mr-2"
         />
         <button
@@ -162,6 +234,15 @@ export default function Page() {
             </th>
             <th scope="col" className="px-6 py-3">
               Description
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Severity
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Start Date
+            </th>
+            <th scope="col" className="px-6 py-3">
+              End Date
             </th>
             <th scope="col" className="px-6 py-3">
               Edit
@@ -216,6 +297,54 @@ export default function Page() {
               </td>
               <td className="px-6 py-4">
                 {editingTaskId === task.id ? (
+                  <select
+                    value={editedTask.severity}
+                    onChange={(e) =>
+                      setEditedTask({ ...editedTask, severity: e.target.value })
+                    }
+                    className="border-2 border-blue-500"
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                ) : (
+                  task.severity
+                )}
+              </td>
+              <td className="px-6 py-4">
+                {editingTaskId === task.id ? (
+                  <input
+                    type="date"
+                    value={editedTask.startDate}
+                    onChange={(e) =>
+                      setEditedTask({
+                        ...editedTask,
+                        startDate: e.target.value,
+                      })
+                    }
+                    className="border-2 border-blue-500"
+                  />
+                ) : (
+                  task.start_date
+                )}
+              </td>
+              <td className="px-6 py-4">
+                {editingTaskId === task.id ? (
+                  <input
+                    type="date"
+                    value={editedTask.endDate}
+                    onChange={(e) =>
+                      setEditedTask({ ...editedTask, endDate: e.target.value })
+                    }
+                    className="border-2 border-blue-500"
+                  />
+                ) : (
+                  task.end_date
+                )}
+              </td>
+              <td className="px-6 py-4">
+                {editingTaskId === task.id ? (
                   <button
                     onClick={handleSave}
                     className="bg-blue-500 text-white px-2 py-1 rounded"
@@ -234,7 +363,7 @@ export default function Page() {
               <td className="px-6 py-4">
                 <button
                   onClick={() => handleDelete(task.id)}
-                  className="text-red-600"
+                  className="bg-red-500 text-white px-2 py-1 rounded"
                 >
                   Delete
                 </button>
