@@ -61,7 +61,7 @@ export default function Page() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/tasks/${editingTaskId}`,
+        `https://sfsapi-f7a49b940304.herokuapp.com/api/tasks/${editingTaskId}`,
         editedTask
       );
       if (response.status === 200) {
@@ -88,7 +88,7 @@ export default function Page() {
   const handleCreate = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/tasks",
+        "https://sfsapi-f7a49b940304.herokuapp.com/api/tasks",
         newTask
       );
       if (response.status === 201) {
