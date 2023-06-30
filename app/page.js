@@ -129,10 +129,6 @@ export default function Home() {
       setEmailError("");
       setPasswordError("");
       setRegisterError(null);
-
-      // Show login component
-      // setShowReg(false);
-      // setShowLogin(true);
     } catch (error) {
       setPassword("");
       setRegisterError(error.response.data.error.email[0]);

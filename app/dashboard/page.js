@@ -114,7 +114,10 @@ export default function Page() {
   }
 
   return (
-    <div className="relative overflow-x-auto mx-20">
+    <div className="relative overflow-x-auto mx-20 mt-5">
+      <nav className="py-10 mb-12 flex justify-between">
+        <h1 className="text-xl font-burtons dark:text-white">SFS Finance</h1>
+      </nav>
       <button
         onClick={handleLogout}
         className="absolute top-4 right-4 text-white bg-red-600 px-4 py-2 rounded"
@@ -145,6 +148,8 @@ export default function Page() {
           Create Task
         </button>
       </div>
+      {/* Display message if no tasks */}
+      {tasks.length === 0 && <p>No tasks available.</p>}
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
