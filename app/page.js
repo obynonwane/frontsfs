@@ -26,10 +26,13 @@ export default function Home() {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(`http://127.0.0.1:8000/api/login`, {
-        email: email,
-        password: password,
-      });
+      const { data } = await axios.post(
+        `https://sfsapi-f7a49b940304.herokuapp.com//api/login`,
+        {
+          email: email,
+          password: password,
+        }
+      );
 
       // Extract the token from the response
       const token = data.token;
@@ -46,11 +49,14 @@ export default function Home() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`http://127.0.0.1:8000/api/register`, {
-        name: name,
-        email: email,
-        password: password,
-      });
+      const { data } = await axios.post(
+        `https://sfsapi-f7a49b940304.herokuapp.com/api/register`,
+        {
+          name: name,
+          email: email,
+          password: password,
+        }
+      );
     } catch (error) {}
   };
   return (

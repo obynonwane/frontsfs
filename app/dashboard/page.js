@@ -20,7 +20,9 @@ export default function Page() {
           ] = `Bearer ${storedToken}`;
         }
 
-        const response = await axios.get("http://127.0.0.1:8000/api/tasks");
+        const response = await axios.get(
+          "https://sfsapi-f7a49b940304.herokuapp.com/api/tasks"
+        );
         const listOfTasks = response.data.tasks;
         setTasks(listOfTasks);
       } catch (error) {
@@ -34,7 +36,7 @@ export default function Page() {
   const handleDelete = async (taskId) => {
     try {
       const response = await axios.delete(
-        `http://127.0.0.1:8000/api/tasks/${taskId}`
+        `https://sfsapi-f7a49b940304.herokuapp.com/api/tasks/${taskId}`
       );
       if (response.status === 200) {
         // Remove the deleted task from the tasks state
