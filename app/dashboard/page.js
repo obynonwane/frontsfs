@@ -27,6 +27,7 @@ export default function Page() {
         setTasks(listOfTasks);
       } catch (error) {
         setError(error);
+        handleLogout();
       }
     }
 
