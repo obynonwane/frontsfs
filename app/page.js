@@ -22,6 +22,8 @@ export default function Home() {
     setEmail("");
     setPassword("");
     setName("");
+    setPasswordError("");
+    setEmailError("");
   };
 
   const loadRegComponent = () => {
@@ -29,6 +31,9 @@ export default function Home() {
     setShowReg(true);
     setEmail("");
     setPassword("");
+    setName("");
+    setPasswordError("");
+    setEmailError("");
   };
   const handleLogin = async (e) => {
     e.preventDefault();
