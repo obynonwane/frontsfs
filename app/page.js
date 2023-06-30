@@ -4,15 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Dashboard from "./dashboard/page";
 import axios from "axios";
+
 export default function Home() {
   const navigation = useRouter();
   const [darkMode, setDarkMode] = useState(false);
-  const [email, setEmail] = useState(""); // State to capture email value
-  const [password, setPassword] = useState(""); // State to capture password value
-  const [name, setName] = useState(""); // State to capture name value
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [showReg, setShowReg] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [loginError, setLoginError] = useState(null);
+  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -24,6 +26,7 @@ export default function Home() {
     setName("");
     setPasswordError("");
     setEmailError("");
+    setNameError("");
   };
 
   const loadRegComponent = () => {
@@ -34,7 +37,9 @@ export default function Home() {
     setName("");
     setPasswordError("");
     setEmailError("");
+    setNameError("");
   };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     // Validate email
@@ -80,6 +85,28 @@ export default function Home() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    // Validate Name
+    if (name.trim() === "") {
+      setNameError("Fullname is required");
+      return;
+    } else {
+      setNameError("");
+    }
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    } else {
+      setEmailError("");
+    }
+
+    // Validate password
+    if (password.trim() === "") {
+      setPasswordError("Password is required");
+      return;
+    } else {
+      setPasswordError("");
+    }
     try {
       const { data } = await axios.post(
         `https://sfsapi-f7a49b940304.herokuapp.com/api/register`,
@@ -89,13 +116,16 @@ export default function Home() {
           password: password,
         }
       );
-    } catch (error) {}
+    } catch (error) {
+      console.log(error, "From rgistering");
+    }
   };
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
+
   return (
     <div className={darkMode ? "dark" : ""}>
       <main className=" bg-white px-10 dark:bg-gray-900 md:px-20 lg:px-40">
@@ -120,6 +150,9 @@ export default function Home() {
 
                 {passwordError && (
                   <p className="text-red-500 text-xs italic">{passwordError}</p>
+                )}
+                {nameError && (
+                  <p className="text-red-500 text-xs italic">{nameError}</p>
                 )}
                 <form
                   className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
@@ -172,6 +205,20 @@ export default function Home() {
           {showReg && (
             <div className="text-center p-10">
               <div className="w-full max-w-xs">
+                {/* Display login error */}
+                {loginError && (
+                  <p className="text-red-500 text-xs italic">{loginError}</p>
+                )}
+                {emailError && (
+                  <p className="text-red-500 text-xs italic">{emailError}</p>
+                )}
+
+                {passwordError && (
+                  <p className="text-red-500 text-xs italic">{passwordError}</p>
+                )}
+                {nameError && (
+                  <p className="text-red-500 text-xs italic">{nameError}</p>
+                )}
                 <form
                   className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
                   onSubmit={handleRegister}
@@ -179,7 +226,6 @@ export default function Home() {
                   <div className="mb-4">
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="email"
                       type="text"
                       placeholder="Name"
                       value={name}
@@ -189,7 +235,6 @@ export default function Home() {
                   <div className="mb-4">
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="email"
                       type="text"
                       placeholder="Email"
                       value={email}
