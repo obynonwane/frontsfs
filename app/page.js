@@ -12,6 +12,9 @@ export default function Home() {
   const [name, setName] = useState(""); // State to capture name value
   const [showReg, setShowReg] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
+  const [loginError, setLoginError] = useState(null);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const loadLoginComponent = () => {
     setShowLogin(true);
@@ -24,6 +27,21 @@ export default function Home() {
   };
   const handleLogin = async (e) => {
     e.preventDefault();
+    // Validate email
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    } else {
+      setEmailError("");
+    }
+
+    // Validate password
+    if (password.trim() === "") {
+      setPasswordError("Password is required");
+      return;
+    } else {
+      setPasswordError("");
+    }
 
     try {
       const { data } = await axios.post(
@@ -43,7 +61,9 @@ export default function Home() {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       navigation.push("/dashboard");
-    } catch (error) {}
+    } catch (error) {
+      setLoginError("Invalid email or password");
+    }
   };
 
   const handleRegister = async (e) => {
@@ -58,6 +78,11 @@ export default function Home() {
         }
       );
     } catch (error) {}
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   };
   return (
     <div className={darkMode ? "dark" : ""}>
@@ -79,6 +104,17 @@ export default function Home() {
           {showLogin && (
             <div className="text-center p-10">
               <div className="w-full max-w-xs">
+                {/* Display login error */}
+                {loginError && (
+                  <p className="text-red-500 text-xs italic">{loginError}</p>
+                )}
+                {emailError && (
+                  <p className="text-red-500 text-xs italic">{emailError}</p>
+                )}
+
+                {passwordError && (
+                  <p className="text-red-500 text-xs italic">{passwordError}</p>
+                )}
                 <form
                   className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
                   onSubmit={handleLogin}
