@@ -19,11 +19,16 @@ export default function Home() {
   const loadLoginComponent = () => {
     setShowLogin(true);
     setShowReg(false);
+    setEmail("");
+    setPassword("");
+    setName("");
   };
 
   const loadRegComponent = () => {
     setShowLogin(false);
     setShowReg(true);
+    setEmail("");
+    setPassword("");
   };
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -62,6 +67,8 @@ export default function Home() {
 
       navigation.push("/dashboard");
     } catch (error) {
+      setEmail("");
+      setPassword("");
       setLoginError("Invalid email or password");
     }
   };
@@ -92,12 +99,6 @@ export default function Home() {
             <h1 className="text-xl font-burtons dark:text-white">
               SFS Finance
             </h1>
-            <ul className="flex items-center">
-              <li>
-                <a className="mr-8">Login</a>
-                <a>register</a>
-              </li>
-            </ul>
           </nav>
 
           {/* Login form */}
@@ -131,16 +132,13 @@ export default function Home() {
                   </div>
                   <div className="mb-6">
                     <input
-                      className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                       id="password"
                       type="password"
                       placeholder="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <p className="text-red-500 text-xs italic">
-                      Please choose a password.
-                    </p>
                   </div>
                   <div className="flex items-center justify-between">
                     <button
