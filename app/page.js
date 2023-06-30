@@ -27,7 +27,7 @@ export default function Home() {
 
     try {
       const { data } = await axios.post(
-        `https://sfsapi-f7a49b940304.herokuapp.com//api/login`,
+        `https://sfsapi-f7a49b940304.herokuapp.com/api/login`,
         {
           email: email,
           password: password,
